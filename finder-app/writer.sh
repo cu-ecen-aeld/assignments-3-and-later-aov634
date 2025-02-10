@@ -3,7 +3,7 @@ if [ $# = 2 ]
 then
 	
 	mkdir -p "$(dirname "$1")"
-	echo "$2" > "$1"
+	echo "$2" > "$1" 
 	exit 0
 
 		
