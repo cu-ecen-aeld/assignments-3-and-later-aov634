@@ -7,7 +7,7 @@ int main(int argc, char *argv[])
     openlog("WriterDebug", LOG_PID | LOG_CONS, LOG_USER);
     if(argc == 3)
     {
-        FILE *file = fopen(argv[1],"w" );
+        FILE *file = fopen(argv[1],"w" ); 
         if(file == NULL)
         {
             syslog(LOG_ERR,"File couldnt open %s, program fail", argv[1]);
