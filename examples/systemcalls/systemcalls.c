@@ -65,7 +65,7 @@ bool do_exec(int count, ...)
     fork();
     if(execv(command[0], command) == -1)
     {
-        system("echo *** ERROR: exec failed with return value -1"); // If execv fails
+        // system("echo *** ERROR: exec failed with return value -1"); // If execv fails
         return false;
     }
     
