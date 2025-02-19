@@ -1,1 +1,1 @@
-home is /home/aov634vbox
+home is $HOME

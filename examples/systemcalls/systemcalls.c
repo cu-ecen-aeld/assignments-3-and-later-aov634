@@ -62,15 +62,30 @@ bool do_exec(int count, ...)
  *   as second argument to the execv() command.
  *
 */
-    fork();
-    if(execv(command[0], command) == -1)
+    
+    pid_t pid = fork();
+    
+    if(pid == -1 )//failed fork 
     {
-        // system("echo *** ERROR: exec failed with return value -1"); // If execv fails
+        printf("\r\n fork ERROR\r\n"); 
+
         return false;
     }
     
-    int status;
-    wait(&status);
+    if(pid > 0) //Parent Process
+    {
+        int status;
+        pid_t child_pid = waitpid(pid, &status, 0); //this is child_pid is the same as PID but a way to be more specific
+        if(child_pid < 0 || WEXITSTATUS(status) != EXIT_SUCCESS)   //Failed Child made
+        {
+            return false;
+        }
+    }
+    if(pid == 0) //Child Process
+    {
+        execv(command[0], &command[0]); //If failed we move to next line, if pass we will leave the process all together
+        exit(EXIT_FAILURE);
+    }
     
     va_end(args);
 
@@ -105,23 +120,59 @@ bool do_exec_redirect(const char *outputfile, int count, ...)
  *   The rest of the behaviour is same as do_exec()
  *
 */
-    int kidpid;
+
+
+    // fork();
+    // if(execv(command[0], command) == -1)
+    // {
+    //     printf("ERROR: exec failed with return value -1"); // If execv fails
+    //     return false;
+    // }
+    printf("\r\n****************output file:%s\r\n",outputfile);
     int fd = open(outputfile, O_WRONLY|O_TRUNC|O_CREAT, 0644);
-    if (fd < 0) { perror("open"); abort(); }
-    switch (kidpid = fork()) {
-    case -1: perror("fork"); abort();
+    if (fd < 0) 
+    { 
+        printf("\r\nOpen ERROR\r\n");
+        perror("open"); 
+        // exit(EXIT_FAILURE); 
+        return false;
+    }
+    int kidpid;
+    kidpid = fork();
+    switch (kidpid) {
+    case -1: 
+        printf("\r\nfork ERROR\r\n");
+        perror("fork"); 
+        // printf("ERROR: exec failed with return value -1"); // If execv fails
+        // exit(EXIT_FAILURE);
+        return false;
     case 0:
-        if (dup2(fd, 1) < 0) { perror("dup2"); abort(); }
+        if (dup2(fd, 1) < 0) 
+        { 
+            printf("\r\ndup2 ERROR\r\n");
+            perror("dup2"); 
+            // exit(EXIT_FAILURE); 
+            return false;
+        }
         close(fd);
-        execv(command[0], command); 
-        perror("execv"); // If execv fails
-        abort();
+        if(execv(command[0], command) == -1)
+        {
+            //printf("ERROR: exec failed with return value -1"); // If execv fails
+            printf("\r\nexecv ERROR\r\n");
+            perror("execv");
+            return false;
+        }
+        // perror("execv"); // If execv fails
+        // exit(EXIT_FAILURE);
     default:
         close(fd);
         /* do whatever the parent wants to do. */
     }
+
+
     int status;
-    wait(&status);
+    waitpid(kidpid, &status, 0);
+    
     va_end(args);
 
     return true;
