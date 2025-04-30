@@ -1,4 +1,10 @@
 #include "systemcalls.h"
+#include <stdio.h>
+#include <unistd.h>
+#include <stdlib.h>
+#include <fcntl.h>
+#include <sys/wait.h>
+
 
 /**
  * @param cmd the command to execute with system()
@@ -16,8 +22,14 @@ bool do_system(const char *cmd)
  *   and return a boolean true if the system() call completed with success
  *   or false() if it returned a failure
 */
-
-    return true;
+    if(system(cmd) == 0)
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
 }
 
 /**
@@ -58,9 +70,39 @@ bool do_exec(int count, ...)
  *   as second argument to the execv() command.
  *
 */
-
-    va_end(args);
-
+    va_end(args);                           //VA list was placed in commands so no longer needed.
+    int status;
+    pid_t pid = fork();                     //make / start a new process  
+    if(pid == -1)
+    {
+        return false;
+    }
+    if(pid == 0)                            //child process
+    {
+        if(execv(command[0], command) == -1)            //execute command with path and command
+        {
+            printf("\r\nERROR: execv failed\r\n");
+            exit(1);
+        }
+    }
+    if(pid > 0)
+    {
+        printf("\r\nI am the Parent\r\n");  //Zombie prevention
+        if (wait(&status) == -1) {
+            printf("\r\nERROR: wait failed\r\n");
+            return false;
+        }
+        // Check if child exited successfully
+        if (WIFEXITED(status) && WEXITSTATUS(status) == 0) 
+        {
+            return true;
+        } 
+        else 
+        {
+            printf("\r\nERROR: Command exited with non-zero status\r\n");
+            return false;
+        }
+    }
     return true;
 }
 
@@ -85,6 +127,7 @@ bool do_exec_redirect(const char *outputfile, int count, ...)
     command[count] = command[count];
 
 
+
 /*
  * TODO
  *   Call execv, but first using https://stackoverflow.com/a/13784315/1446624 as a refernce,
@@ -92,8 +135,53 @@ bool do_exec_redirect(const char *outputfile, int count, ...)
  *   The rest of the behaviour is same as do_exec()
  *
 */
-
     va_end(args);
-
+    int status;
+    int kidpid;
+    int fd = open(outputfile, O_WRONLY|O_TRUNC|O_CREAT, 0644);
+    if (fd < 0)
+    {
+        perror("open");
+        exit(1);
+    }
+    switch (kidpid = fork())
+    {
+        case -1:                    //ERROR
+            perror("fork");
+            exit(1);
+        case 0:                     //child
+            if (dup2(fd, STDOUT_FILENO) < 0)    //Print to outputfile
+            {
+                perror("dup2");
+                exit(1);
+            }
+            close(fd);
+            if(execv(command[0], command) == -1)            //execute command with path and command
+            {
+                printf("\r\nERROR: execv failed\r\n");
+                exit(1);
+                
+            }
+            break; // Just in case
+            
+        default:
+            close(fd);
+            /* do whatever the parent wants to do. */
+            printf("\r\nI am the Parent\r\n");  //Zombie prevention
+            if (wait(&status) == -1) {
+                printf("\r\nERROR: wait failed\r\n");
+                return false;
+            }
+            // Check if child exited successfully
+            if (WIFEXITED(status) && WEXITSTATUS(status) == 0) 
+            {
+                return true;
+            } 
+            else 
+            {
+                printf("\r\nERROR: Command exited with non-zero status\r\n");
+                return false;
+            }
+    }
     return true;
 }
