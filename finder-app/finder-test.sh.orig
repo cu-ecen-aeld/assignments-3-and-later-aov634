@@ -59,7 +59,10 @@ fi
 #echo "Removing the old writer utility and compiling as a native application"
 make clean
 # make build
+<<<<<<< HEAD
+=======
 # make CROSS_COMPILE	#this should handle cross compile
+>>>>>>> New_Start
 
 for i in $( seq 1 $NUMFILES)
 do

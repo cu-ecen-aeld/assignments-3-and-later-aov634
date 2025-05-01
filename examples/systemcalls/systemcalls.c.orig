@@ -22,6 +22,14 @@ bool do_system(const char *cmd)
  *   and return a boolean true if the system() call completed with success
  *   or false() if it returned a failure
 */
+<<<<<<< HEAD
+    int stat = system(cmd);
+    if(stat == -1)
+    {
+        return false;
+    }
+    return true;
+=======
     if(system(cmd) == 0)
     {
         return true;
@@ -30,6 +38,7 @@ bool do_system(const char *cmd)
     {
         return false;
     }
+>>>>>>> New_Start
 }
 
 /**
@@ -70,6 +79,35 @@ bool do_exec(int count, ...)
  *   as second argument to the execv() command.
  *
 */
+<<<<<<< HEAD
+    
+    pid_t pid = fork();
+    
+    if(pid == -1 )//failed fork 
+    {
+        printf("\r\n fork ERROR\r\n"); 
+
+        return false;
+    }
+    
+    if(pid > 0) //Parent Process
+    {
+        int status;
+        pid_t child_pid = waitpid(pid, &status, 0); //this is child_pid is the same as PID but a way to be more specific
+        if(child_pid < 0 || WEXITSTATUS(status) != EXIT_SUCCESS)   //Failed Child made
+        {
+            return false;
+        }
+    }
+    if(pid == 0) //Child Process
+    {
+        execv(command[0], &command[0]); //If failed we move to next line, if pass we will leave the process all together
+        exit(EXIT_FAILURE);
+    }
+    
+    va_end(args);
+
+=======
     va_end(args);                           //VA list was placed in commands so no longer needed.
     int status;
     pid_t pid = fork();                     //make / start a new process  
@@ -103,6 +141,7 @@ bool do_exec(int count, ...)
             return false;
         }
     }
+>>>>>>> New_Start
     return true;
 }
 
@@ -135,6 +174,62 @@ bool do_exec_redirect(const char *outputfile, int count, ...)
  *   The rest of the behaviour is same as do_exec()
  *
 */
+<<<<<<< HEAD
+
+
+    // fork();
+    // if(execv(command[0], command) == -1)
+    // {
+    //     printf("ERROR: exec failed with return value -1"); // If execv fails
+    //     return false;
+    // }
+    printf("\r\n****************output file:%s\r\n",outputfile);
+    int fd = open(outputfile, O_WRONLY|O_TRUNC|O_CREAT, 0644);
+    if (fd < 0) 
+    { 
+        printf("\r\nOpen ERROR\r\n");
+        perror("open"); 
+        // exit(EXIT_FAILURE); 
+        return false;
+    }
+    int kidpid;
+    kidpid = fork();
+    switch (kidpid) {
+    case -1: 
+        printf("\r\nfork ERROR\r\n");
+        perror("fork"); 
+        // printf("ERROR: exec failed with return value -1"); // If execv fails
+        // exit(EXIT_FAILURE);
+        return false;
+    case 0:
+        if (dup2(fd, 1) < 0) 
+        { 
+            printf("\r\ndup2 ERROR\r\n");
+            perror("dup2"); 
+            // exit(EXIT_FAILURE); 
+            return false;
+        }
+        close(fd);
+        if(execv(command[0], command) == -1)
+        {
+            //printf("ERROR: exec failed with return value -1"); // If execv fails
+            printf("\r\nexecv ERROR\r\n");
+            perror("execv");
+            return false;
+        }
+        // perror("execv"); // If execv fails
+        // exit(EXIT_FAILURE);
+    default:
+        close(fd);
+        /* do whatever the parent wants to do. */
+    }
+
+
+    int status;
+    waitpid(kidpid, &status, 0);
+    
+=======
+>>>>>>> New_Start
     va_end(args);
     int status;
     int kidpid;
