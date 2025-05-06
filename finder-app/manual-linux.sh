@@ -50,7 +50,7 @@ if [ ! -e ${OUTDIR}/linux-stable/arch/${ARCH}/boot/Image ]; then
 
 
 fi
-read -p "Press Enter to continue..."            #Added but plan to remove.
+# read -p "Press Enter to continue..."            #Added but plan to remove.
 
 cd ${OUTDIR}/linux-stable
 echo "Adding the Image in outdir"
@@ -75,7 +75,7 @@ mkdir -p ${OUTDIR}/rootfs/{bin,dev,etc,lib,proc,sbin,tmp,var,/usr,/usr/sbin,home
 # QEMU_AUDIO_DRV=none qemu-system-arm -m 256M -nographic -M versatilepb -kernel ${OUTDIR}/Image
 
 
-read -p "Press Enter to continue..."        #Added but plan to remove.
+# read -p "Press Enter to continue..."        #Added but plan to remove.
 
 cd "$OUTDIR"
 if [ ! -d "${OUTDIR}/busybox" ]
@@ -116,7 +116,7 @@ cp -a ${SYSROOT}/lib64/libm.so.6 ${OUTDIR}/rootfs/lib64/
 cp -a ${SYSROOT}/lib64/libresolv.so.2 ${OUTDIR}/rootfs/lib64/
 cp -a ${SYSROOT}/lib64/libc.so.6 ${OUTDIR}/rootfs/lib64/
 
-read -p "Press Enter to continue..."            #Added but plan to remove.
+# read -p "Press Enter to continue..."            #Added but plan to remove.
 
 
 # TODO: Make and install busybox
@@ -127,7 +127,7 @@ make CONFIG_PREFIX=${OUTDIR}/rootfs ARCH=${ARCH} CROSS_COMPILE=${CROSS_COMPILE} 
 echo "Library dependencies"
 ${CROSS_COMPILE}readelf -a ${OUTDIR}/rootfs/bin/busybox | grep "program interpreter"
 ${CROSS_COMPILE}readelf -a ${OUTDIR}/rootfs/bin/busybox | grep "Shared library"
-read -p "Press Enter to continue... after lib depend"            #Added but plan to remove.
+# read -p "Press Enter to continue... after lib depend"            #Added but plan to remove.
 if [ ! -f "${OUTDIR}/rootfs/bin/busybox" ]; then
   echo "❌ Error: BusyBox binary not found at ${OUTDIR}/rootfs/bin/busybox"
   exit 1
@@ -143,12 +143,12 @@ grep -o '\[.*\]' | tr -d '[]' | \
 while read lib; do                                                  #Awk was reading the word "shared" this was added to try to find the actual library name.
     # Step 2: Check if the library exists on the host system
     lib_path=$(find /lib /usr/lib -name "$lib" 2>/dev/null)
-    read -p "Press Enter to continue..."            #Added but plan to remove.
+    # read -p "Press Enter to continue..."            #Added but plan to remove.
     if [ -n "$lib_path" ]; then
         # Step 3: Copy the library to rootfs/lib
         echo "Copying $lib to ${OUTDIR}/rootfs/lib/"
         cp $lib_path ${OUTDIR}/rootfs/lib/
-        read -p "Press Enter to continue..."            #Added but plan to remove.
+        # read -p "Press Enter to continue..."            #Added but plan to remove.
         # I want to add the librarys so im trying this way of using AArch64 specific libraries
         
 
@@ -192,7 +192,7 @@ find . | cpio -H newc -ov --owner root:root > "${OUTDIR}/initramfs.cpio" || {
 }
 echo "Compressing initramfs.cpio"
 gzip -f "${OUTDIR}/initramfs.cpio"
-read -p "Press Enter to continue..."            #Added but plan to remove.
+# read -p "Press Enter to continue..."            #Added but plan to remove.
 
 #added and keeping, it seem to be the right step
 QEMU_AUDIO_DRV=none qemu-system-aarch64 \
