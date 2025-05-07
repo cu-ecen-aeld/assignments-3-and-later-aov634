@@ -8,8 +8,8 @@ set -u
 NUMFILES=10
 WRITESTR=AELD_IS_FUN
 WRITEDIR=/tmp/aeld-data
-username=$(cat conf/username.txt)
-
+# username=$(cat conf/username.txt)			#remove conf
+username=$(cat username.txt)
 
 # make -f finder-app/Makefile clean
 # make -f finder-app/Makefile build
@@ -40,7 +40,11 @@ echo "Writing ${NUMFILES} files containing string ${WRITESTR} to ${WRITEDIR}"
 rm -rf "${WRITEDIR}"
 
 # create $WRITEDIR if not assignment1
-assignment=`cat ../conf/assignment.txt`
+# assignment=`cat ../conf/assignment.txt`			#maybe conf is to specific?
+
+assignment=$(cat assignment.txt)
+
+
 
 if [ $assignment != 'assignment1' ]
 then
@@ -57,7 +61,7 @@ then
 	fi
 fi
 #echo "Removing the old writer utility and compiling as a native application"
-make clean
+# make clean
 # make build
 # make CROSS_COMPILE	#this should handle cross compile
 

@@ -179,10 +179,15 @@ cp ${FINDER_APP_DIR}/finder.sh ${OUTDIR}/rootfs/home/
 cp ${FINDER_APP_DIR}/conf/username.txt ${OUTDIR}/rootfs/home/
 cp ${FINDER_APP_DIR}/conf/assignment.txt ${OUTDIR}/rootfs/home/
 cp ${FINDER_APP_DIR}/finder-test.sh ${OUTDIR}/rootfs/home/
+cp ${FINDER_APP_DIR}/autorun-qemu.sh ${OUTDIR}/rootfs/home/
+
+
 
 # TODO: Chown the root directory
 cd ${OUTDIR}/rootfs/
-sudo chown -R root:root *
+# sudo chown -R root:root *
+sudo chown -R root:root .
+
 
 # TODO: Create initramfs.cpio.gz
 cd "${OUTDIR}/rootfs"
@@ -194,12 +199,12 @@ echo "Compressing initramfs.cpio"
 gzip -f "${OUTDIR}/initramfs.cpio"
 # read -p "Press Enter to continue..."            #Added but plan to remove.
 
-#added and keeping, it seem to be the right step
-QEMU_AUDIO_DRV=none qemu-system-aarch64 \
-  -machine virt \
-  -cpu cortex-a53 \
-  -m 512M \
-  -nographic \
-  -kernel ${OUTDIR}/Image \
-  -initrd ${OUTDIR}/initramfs.cpio.gz \
-  -append "console=ttyAMA0 root=/dev/ram rdinit=/sbin/init"
+# #added and keeping, it seem to be the right step
+# QEMU_AUDIO_DRV=none qemu-system-aarch64 \
+#   -machine virt \
+#   -cpu cortex-a53 \
+#   -m 512M \
+#   -nographic \
+#   -kernel ${OUTDIR}/Image \
+#   -initrd ${OUTDIR}/initramfs.cpio.gz \
+#   -append "console=ttyAMA0 root=/dev/ram rdinit=/sbin/init"
