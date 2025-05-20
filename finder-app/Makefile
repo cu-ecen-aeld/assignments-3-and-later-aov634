@@ -1,6 +1,8 @@
 CC = gcc
 .DEFAULT_GOAL := build
 
+all: build
+
 #clean previous build
 clean:                      #clean needs to be first so we wont anything else first
 	rm -f writer.o writer
