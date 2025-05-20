@@ -9,7 +9,8 @@ NUMFILES=10
 WRITESTR=AELD_IS_FUN
 WRITEDIR=/tmp/aeld-data
 # username=$(cat conf/username.txt)			#remove conf
-username=$(cat username.txt)
+# username=$(cat username.txt)
+username=$(cat  /etc/finder-app/conf/username.txt)		#added for assignment 4 find on QEMU
 
 # make -f finder-app/Makefile clean
 # make -f finder-app/Makefile build
@@ -42,7 +43,7 @@ rm -rf "${WRITEDIR}"
 # create $WRITEDIR if not assignment1
 # assignment=`cat ../conf/assignment.txt`			#maybe conf is to specific?
 
-assignment=$(cat assignment.txt)
+assignment=$(cat /etc/finder-app/conf/assignment.txt)		#added for assignment 4 find on QEMU
 
 
 
