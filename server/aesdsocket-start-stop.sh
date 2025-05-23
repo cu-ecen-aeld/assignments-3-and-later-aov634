@@ -1,6 +1,6 @@
 #!/bin/sh
 
-DAEMON=DAEMON="/usr/bin/aesdsocket"
+DAEMON="/usr/bin/aesdsocket"
 DAEMON_NAME="aesdsocket"
 
 
