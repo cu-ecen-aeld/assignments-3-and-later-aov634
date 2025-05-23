@@ -1,6 +1,6 @@
 #!/bin/sh
 
-DAEMON="$(realpath "$(dirname "$0")/aesdsocket")"
+DAEMON=DAEMON="/usr/bin/aesdsocket"
 DAEMON_NAME="aesdsocket"
 
 
