@@ -10,7 +10,7 @@ clean:                      #clean needs to be first so we wont anything else fi
 
 ifeq ($(BUILD),cross)
     $(info CROSS-COMPILATION ENABLED)
-	CC = /home/aov634vbox/Downloads/arm-gnu-toolchain-13.3.rel1-x86_64-aarch64-none-linux-gnu/bin/aarch64-none-linux-gnu-gcc  #$(PATH) #aarch64-none-linux-gnu-
+	CC = /home/aov634/Downloads/arm-gnu-toolchain-13.3.rel1-x86_64-aarch64-none-linux-gnu/bin/aarch64-none-linux-gnu-gcc  #$(PATH) #aarch64-none-linux-gnu-
  
 else
     $(info NATIVE COMPILATION: Using default GCC)
